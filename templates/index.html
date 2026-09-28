@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Las Alpaquitas | Calculadora</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <main class="shell">
+    <section class="brand">
+      <div class="alpaca">🦙</div>
+      <div>
+        <p class="eyebrow">Emprendimiento</p>
+        <h1>Las Alpaquitas</h1>
+        <p class="tagline">Hot dogs & batidos</p>
+      </div>
+    </section>
+
+    <form method="post" class="card">
+      <h2>Calculadora de pedido</h2>
+      <p class="helper">Ingresa precios y cantidades. Activa el 10% únicamente en los productos que estén en promoción.</p>
+
+      <section class="product">
+        <div class="product-title">
+          <span class="icon">🌭</span>
+          <div><h3>Perro caliente</h3><span>Hot dog</span></div>
+        </div>
+        <div class="grid">
+          <label>Precio ₡
+            <input name="hotdog_price" type="number" min="0" step="1" value="{{ request.form.get('hotdog_price', '2000') }}" required>
+          </label>
+          <label>Cantidad
+            <input name="hotdog_qty" type="number" min="0" step="1" value="{{ request.form.get('hotdog_qty', '1') }}" required>
+          </label>
+        </div>
+        <label class="discount">
+          <input name="hotdog_discount" type="checkbox" {% if request.form.get('hotdog_discount') %}checked{% endif %}>
+          <span>Aplicar 10% de descuento al hot dog</span>
+        </label>
+      </section>
+
+      <section class="product">
+        <div class="product-title">
+          <span class="icon">🥤</span>
+          <div><h3>Batido</h3><span>Bebida</span></div>
+        </div>
+        <div class="grid">
+          <label>Precio ₡
+            <input name="shake_price" type="number" min="0" step="1" value="{{ request.form.get('shake_price', '1500') }}" required>
+          </label>
+          <label>Cantidad
+            <input name="shake_qty" type="number" min="0" step="1" value="{{ request.form.get('shake_qty', '1') }}" required>
+          </label>
+        </div>
+        <label class="discount">
+          <input name="shake_discount" type="checkbox" {% if request.form.get('shake_discount') %}checked{% endif %}>
+          <span>Aplicar 10% de descuento al batido</span>
+        </label>
+      </section>
+
+      <button type="submit">CALCULAR TOTAL</button>
+
+      {% if result %}
+      <section class="receipt">
+        <div><span>Hot dogs</span><strong>₡{{ "{:,.0f}".format(result.hotdog_subtotal) }}</strong></div>
+        <div><span>Batidos</span><strong>₡{{ "{:,.0f}".format(result.shake_subtotal) }}</strong></div>
+        <div><span>Subtotal</span><strong>₡{{ "{:,.0f}".format(result.subtotal) }}</strong></div>
+        <div class="saving"><span>Descuento</span><strong>- ₡{{ "{:,.0f}".format(result.discount) }}</strong></div>
+        <div class="total"><span>TOTAL</span><strong>₡{{ "{:,.0f}".format(result.total) }}</strong></div>
+      </section>
+      {% endif %}
+    </form>
+  </main>
+</body>
+</html>
